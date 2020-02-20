@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 
 
 import static com.ivn.holalibgdx.Constantes.VELOCIDAD_NAVE;
@@ -28,6 +29,8 @@ public class Application extends ApplicationAdapter {
 
 		marcianos = new Array<>();
 		rocas = new Array<>();
+
+		generarRocas();
 	}
 
 	private void generarEnemigos() {
@@ -39,7 +42,12 @@ public class Application extends ApplicationAdapter {
 
 	private void generarRocas() {
 
-		rocas.add(new Roca(new Vector2(Gdx.graphics.getWidth() - 20, MathUtils.random(0, Gdx.graphics.getHeight())), new Texture("enemy/stone.png"), 3, 10));
+        Timer.schedule(new Timer.Task() {
+            public void run(){
+                rocas.add(new Roca(new Vector2(Gdx.graphics.getWidth() - 20, MathUtils.random(0, Gdx.graphics.getHeight())), new Texture("enemy/stone1.png"), 3, 10));
+            }
+        }, 1, 1);
+
 	}
 
 	@Override
@@ -54,7 +62,7 @@ public class Application extends ApplicationAdapter {
 
 		generarEnemigos();
 
-		generarRocas();
+		//generarRocas();
 
 		moverEnemigos();
 
@@ -74,6 +82,11 @@ public class Application extends ApplicationAdapter {
 
 			}
 		}
+
+		for(Roca roca: rocas)
+			if(roca.rect.overlaps(nave.rect))
+				System.exit(0);
+
 	}
 
 	public void moverEnemigos(){
