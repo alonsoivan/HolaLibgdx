@@ -12,8 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 
-
-import static com.ivn.holalibgdx.Constantes.VELOCIDAD_NAVE;
+import static com.ivn.holalibgdx.Constantes.*;
 
 public class Application extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -35,7 +34,7 @@ public class Application extends ApplicationAdapter {
 
 	private void generarEnemigos() {
 		if (TimeUtils.millis() - tiempoJuegoE > Constantes.TIEMPO_ENTRE_MARCIANOS) {
-			marcianos.add(new Marciano(new Vector2(Gdx.graphics.getWidth() - 20, MathUtils.random(0, Gdx.graphics.getHeight())), new Texture("enemy/e_f1.png"), 3, 10));
+			marcianos.add(new Marciano(new Vector2(Gdx.graphics.getWidth() - 20, MathUtils.random(0, Gdx.graphics.getHeight())), new Texture("enemy/e_f1.png"), 3, VELOCIDAD_MARCIANOS));
 			tiempoJuegoE = TimeUtils.millis();
 		}
 	}
@@ -44,7 +43,7 @@ public class Application extends ApplicationAdapter {
 
         Timer.schedule(new Timer.Task() {
             public void run(){
-                rocas.add(new Roca(new Vector2(Gdx.graphics.getWidth() - 20, MathUtils.random(0, Gdx.graphics.getHeight())), new Texture("enemy/stone1.png"), 3, 10));
+                rocas.add(new Roca(new Vector2(Gdx.graphics.getWidth() - 20, MathUtils.random(0, Gdx.graphics.getHeight())), new Texture("enemy/stone1.png"), 3, VELOCIDAD_ROCAS));
             }
         }, 1, 1);
 
@@ -70,7 +69,17 @@ public class Application extends ApplicationAdapter {
 
 		comprobarColisiones();
 
+		moverBalas();
 	}
+
+	public void moverBalas(){
+	    for (Bala bala: nave.balas) {
+			bala.mover();
+
+			if (bala.getPosicion().x >= Gdx.graphics.getWidth())
+				nave.balas.removeValue(bala, true);
+		}
+    }
 
 	public void comprobarColisiones(){
 		for(Marciano marciano: marcianos) {
@@ -80,6 +89,15 @@ public class Application extends ApplicationAdapter {
 				nave.quitarvida();
 				marcianos.removeValue(marciano,true);
 
+			}
+
+			for (Bala bala: nave.balas) {
+				if (bala.rect.overlaps(marciano.rect)) {
+					marciano.quitarvida();
+					nave.balas.removeValue(bala, true);
+					if(!marciano.estaVivo())
+						marcianos.removeValue(marciano,true);
+				}
 			}
 		}
 
@@ -116,6 +134,9 @@ public class Application extends ApplicationAdapter {
 			nave.moverIzquierda();
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
 			nave.moverDerecha();
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+		    nave.disparar();
 	}
 
 	private void pintar() {

@@ -1,19 +1,30 @@
 package com.ivn.holalibgdx;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+
+import static com.ivn.holalibgdx.Constantes.VELOCIDAD_BALA;
 
 public class Nave extends Personaje{
+
     public enum TipoDisparo{
         UNO, RAFAGA
     }
+
     private boolean inmune;
     private TipoDisparo disparo;
 
+    public Array<Bala> balas;
+
     public Nave(Vector2 posicion, Texture textura, int vidas, int velocidad, boolean inmune, TipoDisparo disparo) {
         super(posicion, textura, vidas, velocidad);
+
         this.inmune = inmune;
         this.disparo = disparo;
+
+        balas = new Array<>();
     }
 
     public boolean isInmune() {
@@ -30,5 +41,17 @@ public class Nave extends Personaje{
 
     public void setDisparo(TipoDisparo disparo) {
         this.disparo = disparo;
+    }
+
+    @Override
+    public void pintar(SpriteBatch batch) {
+        super.pintar(batch);
+
+        for (Bala bala : balas)
+            batch.draw(bala.getTextura(),bala.getPosicion().x,bala.getPosicion().y);
+    }
+
+    public void disparar(){
+        balas.add(new Bala(new Vector2(getPosicion().x+(getTextura().getWidth()),getPosicion().y+(getTextura().getHeight()/2)-(new Texture("ship/bullet.png").getHeight()/2)), new Texture("ship/bullet.png"),  VELOCIDAD_BALA));
     }
 }

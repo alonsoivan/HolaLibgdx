@@ -80,12 +80,9 @@ public abstract class Personaje {
 
     public void quitarvida(){
         vidas--;
-        if(!estaVivo())
-            System.exit(0);
-
     }
 
     public boolean estaVivo(){
-        return vidas>=0;
+        return vidas>0;
     }
 }
