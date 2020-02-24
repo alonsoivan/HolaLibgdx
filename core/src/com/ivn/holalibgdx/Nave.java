@@ -1,5 +1,7 @@
 package com.ivn.holalibgdx;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +18,8 @@ public class Nave extends Personaje{
     private boolean inmune;
     private TipoDisparo disparo;
 
+    private Sound sDisparo;
+
     public Array<Bala> balas;
 
     public Nave(Vector2 posicion, Texture textura, int vidas, int velocidad, boolean inmune, TipoDisparo disparo) {
@@ -23,6 +27,8 @@ public class Nave extends Personaje{
 
         this.inmune = inmune;
         this.disparo = disparo;
+
+        sDisparo = Gdx.audio.newSound(Gdx.files.internal("sounds/disparo.mp3"));
 
         balas = new Array<>();
     }
@@ -52,6 +58,9 @@ public class Nave extends Personaje{
     }
 
     public void disparar(){
+
+        sDisparo.play(0.35f);
+
         balas.add(new Bala(new Vector2(getPosicion().x+(getTextura().getWidth()),getPosicion().y+(getTextura().getHeight()/2)-(new Texture("ship/bullet.png").getHeight()/2)), new Texture("ship/bullet.png"),  VELOCIDAD_BALA));
     }
 }

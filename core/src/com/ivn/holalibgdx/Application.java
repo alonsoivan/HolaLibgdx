@@ -3,6 +3,8 @@ package com.ivn.holalibgdx;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,6 +22,8 @@ public class Application extends ApplicationAdapter {
 	private Array<Marciano> marcianos;
 	private Array<Roca> rocas;
 	private long tiempoJuegoE;
+	private Sound impacto;
+	private Music fondo;
 
 	@Override
 	public void create () {
@@ -28,6 +32,13 @@ public class Application extends ApplicationAdapter {
 
 		marcianos = new Array<>();
 		rocas = new Array<>();
+
+		impacto = Gdx.audio.newSound(Gdx.files.internal("sounds/impacto.mp3"));
+		fondo = Gdx.audio.newMusic(Gdx.files.internal("sounds/fondo.mp3"));
+
+		fondo.setLooping(true);
+		fondo.play();
+		fondo.setVolume(0.8F);
 
 		generarRocas();
 	}
@@ -86,25 +97,42 @@ public class Application extends ApplicationAdapter {
 
 			if(marciano.rect.overlaps(nave.rect)) {
 
+				impacto.play(0.35f);
+
 				nave.quitarvida();
 				marcianos.removeValue(marciano,true);
-
+				if (!nave.estaVivo())
+					System.exit(0);
 			}
 
 			for (Bala bala: nave.balas) {
 				if (bala.rect.overlaps(marciano.rect)) {
+
+					impacto.play(0.35f);
+
 					marciano.quitarvida();
+
 					nave.balas.removeValue(bala, true);
+
 					if(!marciano.estaVivo())
 						marcianos.removeValue(marciano,true);
 				}
 			}
 		}
 
-		for(Roca roca: rocas)
-			if(roca.rect.overlaps(nave.rect))
+		for(Roca roca: rocas) {
+			if (roca.rect.overlaps(nave.rect))
 				System.exit(0);
 
+
+			for (Bala bala: nave.balas) {
+				if (bala.rect.overlaps(roca.rect)) {
+					impacto.play(0.35f);
+
+					nave.balas.removeValue(bala, true);
+				}
+			}
+		}
 	}
 
 	public void moverEnemigos(){
@@ -113,6 +141,7 @@ public class Application extends ApplicationAdapter {
 
 			if(marciano.getPosicion().x <= 0)
 				marcianos.removeValue(marciano, true);
+
 		}
 	}
 
