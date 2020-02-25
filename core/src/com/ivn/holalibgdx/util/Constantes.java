@@ -1,4 +1,4 @@
-package com.ivn.holalibgdx;
+package com.ivn.holalibgdx.util;
 
 public class Constantes {
     public static final int VELOCIDAD_NAVE = 6;

@@ -1,4 +1,4 @@
-package com.ivn.holalibgdx;
+package com.ivn.holalibgdx.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import static com.ivn.holalibgdx.Constantes.VELOCIDAD_BALA;
+import static com.ivn.holalibgdx.util.Constantes.VELOCIDAD_BALA;
 
 public class Nave extends Personaje{
 

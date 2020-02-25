@@ -1,4 +1,4 @@
-package com.ivn.holalibgdx;
+package com.ivn.holalibgdx.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
